@@ -1,0 +1,53 @@
+EXPERIMENT 8 - B
+NAME :ADWAITH RAJ
+ROLL NO : 5
+
+----------------------------------------------------------------
+
+-- CREATING TABLES
+
+create table accounts(accno int primary key, name varchar(20), accbal float);
+
+insert into accounts values(1,'Albin',50000);
+insert into accounts values(2,'Aravind',500001);
+insert into accounts values(3,'Jacob',25000);
+insert into accounts values(4,'Bailu',30000);
+insert into accounts values(5,'Gokul',600);
+insert into accounts values(6,'Hoolay',9999);
+
+----------------------------------------------------------------
+
+--FUNCTION TO CHECK CATEGORY
+
+create or replace function dc(x in number) return varchar is msg varchar(8);
+begin
+	if x>50000 then
+		msg:='Platinum';
+	elsif x>10000 then
+		msg:='Gold';
+	else
+		msg:='Silver';
+	end if;
+	return msg;
+END;
+/
+
+----------------------------------------------------------------
+
+--OUTPUT
+
+SQL> @/home/cs-db-06/ADWAITH/cat.sql
+
+Function created.
+
+SQL> select accno,name,accbal,dc(accbal) as category from accounts;
+
+     ACCNO NAME 		    ACCBAL	CATEGORY
+---------- -------------------- ---------- -------------
+	 1 Albin		     50000 	    Gold	
+	 2 Aravind		    500001	Platinum
+	 3 Jacob		     25000          Gold 
+	 4 Bailu		     30000          Gold
+	 5 Gokul		       600        Silver
+	 6 Hoolay		      9999        Silver
+

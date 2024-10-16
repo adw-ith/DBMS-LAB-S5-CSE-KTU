@@ -1,0 +1,65 @@
+EXPERIMENT 9 - HONOURS ELIGIBILITY
+NAME :ADWAITH RAJ
+ROLL NO : 5
+
+----------------------------------------------------------------
+
+-- CREATING TABLES
+
+create table students(rollno int primary key, name varchar(20), grade1 float, grade2 float);
+
+insert into students values(1,'Albin',4,8);
+insert into students values(2,'Aravind',8,9);
+insert into students values(3,'Jacob',3,5);
+insert into students values(4,'Balu',6,8);
+insert into students values(5,'Gokul',2,9);
+insert into students values(6,'Adithyan',1,2);
+
+----------------------------------------------------------------
+
+--PL/SQL CODE
+
+set serveroutput on
+declare
+	cursor std is select * from students where grade1+grade2>12 order by rollno;
+	great float;
+	msg varchar2(15);
+begin
+	dbms_output.put_line('Rno'||' ' ||'name'||'         '||'semester'||'   '||'mark');
+	for i in std loop
+		if (i.grade1>i.grade2) then
+			great := i.grade1;
+			msg := 'semester 1 ';
+			dbms_output.put_line(i.rollno||'   ' ||i.name||'    '||msg||'  '||great);
+		else
+			great := i.grade2;
+			msg := 'semester 2 ';
+			dbms_output.put_line(i.rollno||'   ' ||i.name||'    '||msg||'  '||great);
+		end if;	
+	end loop;
+end;
+/
+
+----------------------------------------------------------------
+
+--OUTPUT
+
+SQL> select * from students;
+
+    ROLLNO NAME 		    GRADE1     GRADE2
+---------- -------------------- ---------- ----------
+	 1 Albin			 4	    8
+	 2 Aravind			 8	    9
+	 3 Jacob			 9	    5
+	 4 Balu 			 6	    8
+	 5 Gokul			 2	    9
+	 6 Adithyan			 1	    2
+	 
+SQL> @/home/cs-db-06/ADWAITH/honours.sql
+Rno name	semester    mark
+2   Aravind    semester 2    9
+3   Jacob      semester 1    9
+4   Balu       semester 2    8
+
+PL/SQL procedure successfully completed.
+

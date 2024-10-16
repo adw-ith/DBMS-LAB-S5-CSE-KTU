@@ -1,0 +1,167 @@
+EXPERIMENT 6 - BANKING SYSTEM
+NAME :ADWAITH RAJ
+ROLL NO : 5
+
+----------------------------------------------------------------
+
+-- CREATING TABLES
+
+create table account(accno int primary key, name varchar(20), accbal number);
+
+insert into account values(1,'Albin',1500);
+insert into account values(2,'Aravind',2500);
+insert into account values(3,'Jacob',400);
+insert into account values(4,'Balu',900);
+insert into account values(5,'Gokul',600);
+insert into account values(6,'Gokul',10000);
+
+----------------------------------------------------------------
+
+-- A. CREDIT/DEBIT/CHECK BALANCE
+
+set serveroutput on
+accept account_no PROMPT 'Enter account number: '
+prompt '1.Debit   2.Credit   3.Check balance'
+DECLARE
+	choice varchar(1);
+	amount number(5);
+	account_no number(5) := &account_no;
+	zero number := 0;
+	bal number(10);
+	ch number :=1;
+BEGIN
+		choice := &choice;
+		amount :=&amount;
+		select accbal into bal from account where accno = account_no;
+		case
+			when choice = '1' then
+				if(zero<(bal - amount)) then
+					update account set accbal = accbal - amount where accno = account_no;
+					dbms_output.put_line('Debited');
+				else
+					dbms_output.put_line('Insufficient Balance');
+				end if;
+				select accbal into amount from account where accno = account_no;
+				dbms_output.put_line('New Balance :'||amount);
+			when choice = '2' then
+				update account set accbal = accbal + amount where accno = account_no;
+				dbms_output.put_line('Credited');
+				select accbal into amount from account where accno = account_no;
+				dbms_output.put_line('New Balance :'||amount);		
+			when choice = '3' then
+				select accbal into amount from account where accno = account_no;
+				dbms_output.put_line('Balance '||amount);
+			when choice = '4' then
+				ch:=6;
+		END CASE;
+END;
+/
+
+
+-- A. MINIMUM BALANCE
+
+
+set serveroutput on
+DECLARE
+	actno int;
+	xminbal number(3) := 500;
+	xbal number(5);
+BEGIN
+	
+	actno := &actno;
+	select accbal into xbal from account where accno = actno;
+	IF (xminbal=<(xbal-200))then
+		update account set accbal = accbal - 200 where accno = actno;
+		xbal := xbal-200;
+		dbms_output.put_line('Current balance : '||xbal);
+	ELSE 
+		dbms_output.put_line('Unsuccessful');
+		dbms_output.put_line('Current balance : '||xbal);
+	END IF;
+END;
+/
+
+
+
+-------------------
+-------OUTPUT------
+-------------------
+
+SQL> select * from account;
+
+     ACCNO NAME 		    ACCBAL
+---------- -------------------- ----------
+	 1 Albin		      1200
+	 2 Aravind		      2500
+	 3 Jacob		       400
+	 4 Balu 		       900
+	 5 Gokul		       600
+	 6 Gokul		     10000
+
+6 rows selected.
+
+SQL> @/home/cs-db-06/ADWAITH/second.sql
+Enter value for actno: 3
+old   7: 	actno := &actno;
+new   7: 	actno := 3;
+Unsuccessful
+Current balance : 400
+
+PL/SQL procedure successfully completed.
+
+SQL> @/home/cs-db-06/ADWAITH/second.sql 
+Enter value for actno: 4
+old   7: 	actno := &actno;
+new   7: 	actno := 4;
+Current balance : 700
+
+PL/SQL procedure successfully completed.
+
+SQL> @/home/cs-db-06/ADWAITH/bank.sql;
+Enter account number: 1
+'1.Debit   2.Credit   3.Check balance'
+old   4: 	account_no number(5) := &account_no;
+new   4: 	account_no number(5) := 1;
+Enter value for choice: 1
+old   9: 		choice := &choice;
+new   9: 		choice := 1;
+Enter value for amount: 200
+old  10: 		amount :=&amount;
+new  10: 		amount :=200;
+Debited
+New Balance :1000
+
+PL/SQL procedure successfully completed.
+
+SQL> @/home/cs-db-06/ADWAITH/bank.sql;
+Enter account number: 3
+'1.Debit   2.Credit   3.Check balance'
+old   4: 	account_no number(5) := &account_no;
+new   4: 	account_no number(5) := 3;
+Enter value for choice: 2
+old   9: 		choice := &choice;
+new   9: 		choice := 2;
+Enter value for amount: 100
+old  10: 		amount :=&amount;
+new  10: 		amount :=100;
+Credited
+New Balance :500
+
+PL/SQL procedure successfully completed.
+
+SQL> @/home/cs-db-06/ADWAITH/bank.sql;
+Enter account number: 4
+'1.Debit   2.Credit   3.Check balance'
+old   4: 	account_no number(5) := &account_no;
+new   4: 	account_no number(5) := 4;
+Enter value for choice: 3
+old   9: 		choice := &choice;
+new   9: 		choice := 3;
+Enter value for amount: 0
+old  10: 		amount :=&amount;
+new  10: 		amount :=0;
+Balance 700
+
+PL/SQL procedure successfully completed.
+
+

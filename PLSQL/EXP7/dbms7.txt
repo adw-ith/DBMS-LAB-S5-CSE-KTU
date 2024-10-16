@@ -1,0 +1,94 @@
+EXPERIMENT 7 - AVERAGE STUDENT
+NAME :ADWAITH RAJ
+ROLL NO : 5
+
+----------------------------------------------------------------
+
+-- CREATING TABLES
+
+create table student(rollno int primary key, name varchar(20), mark1 int , mark2 int , mark3 int);
+
+insert into student values(1,'Albin',50 ,60 ,80);
+insert into student values(2,'Aravind',40 ,30,30);
+insert into student values(3,'Jacob',30,60,70);
+insert into student values(4,'Balu',60,10,20);
+insert into student values(5,'Gokul',20,30,40);
+insert into student values(6,'Adithyan',20,60,50);
+insert into student values(7,'Anu',100,90,80);
+
+----------------------------------------------------------------
+
+--PL/SQL CODE
+
+set serveroutput on
+DECLARE
+	average number(5);
+	Rno number(5);
+	nm Varchar2(10);
+	f_date Varchar2(20);
+	f_day Varchar2(20);
+BEGIN	
+	Rno := &Rno;
+	
+	select ((mark1+mark2+mark3)/3) into average from student where rollno = Rno;
+	select name into nm from student where rollno = Rno;
+	dbms_output.put_line('Roll No : '||Rno);
+	dbms_output.put_line('Name : '||nm);
+	dbms_output.put_line('Average marks : '||average);
+	if (average<40) then
+		dbms_output.put_line('Need improvement');
+	end if;
+	Select To_char(Sysdate,'dd-mm-yyyy') into f_date from dual;
+	Select To_char(Sysdate,'day') into f_day from dual;
+	Dbms_output.put_line('Date : '||f_date);
+	Dbms_output.put_line('Day : '||f_day);
+END;
+/
+
+----------------------------------------------------------------
+
+-------------------
+-------OUTPUT------
+-------------------
+
+SQL> select * from student;
+
+    ROLLNO NAME 		     MARK1	MARK2	   MARK3
+---------- -------------------- ---------- ---------- ----------
+	 1 Albin			50	   60	      80
+	 2 Aravind			40	   30	      30
+	 3 Jacob			30	   60	      70
+	 4 Balu 			60	   10	      20
+	 5 Gokul			20	   30	      40
+	 6 Adithyan			20	   60	      50
+	 7 Anu			       100	   90	      80
+
+7 rows selected.
+
+SQL> @/home/cs-db-06/ADWAITH/avgstd.sql
+Enter value for rno: 2
+old   8: 	Rno := &Rno;
+new   8: 	Rno := 2;
+Roll No : 2
+Name : Aravind
+Average marks : 33
+Need improvement
+Date : 24-08-2024
+Day : saturday
+
+PL/SQL procedure successfully completed.
+
+SQL> @/home/cs-db-06/ADWAITH/avgstd.sql
+Enter value for rno: 1
+old   8: 	Rno := &Rno;
+new   8: 	Rno := 1;
+Roll No : 1
+Name : Albin
+Average marks : 63
+Date : 24-08-2024
+Day : saturday
+
+PL/SQL procedure successfully completed.
+
+
+

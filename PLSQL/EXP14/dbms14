@@ -1,0 +1,176 @@
+EXPERIMENT 14 - PACKAGE : EMPLOYEE
+NAME :ADWAITH RAJ
+ROLL NO : 5
+
+----------------------------------------------------------------
+
+-- CREATING TABLES
+
+create table emplo(eid int, ename varchar(20), eaddress varchar(20), esalary int);
+
+----------------------------------------------------------------
+
+--PACKAGE
+
+set serveroutput on
+CREATE OR REPLACE PACKAGE e_pack AS
+	PROCEDURE addEmp(e_id emplo.eid%type,
+	e_name emplo.ename%type,
+	e_addr emplo.eaddress%type,
+	e_sal emplo.esalary%type);
+
+	PROCEDURE delEmp(e_id emplo.eid%type);
+
+	PROCEDURE listEmp;
+
+	FUNCTION retSal (x in number) return number;
+END e_pack;
+/
+
+--PACKAGE BODY
+
+SET SERVEROUTPUT ON
+CREATE OR REPLACE PACKAGE BODY e_pack AS
+	PROCEDURE addEmp(e_id emplo.eid%type,
+	e_name emplo.ename%type,
+	e_addr emplo.eaddress%type,
+	e_sal emplo.esalary%type)
+	IS
+	BEGIN
+		INSERT INTO emplo(eid,ename,eaddress,esalary) VALUES(e_id,e_name,e_addr,e_sal);
+	END addEmp;
+
+	PROCEDURE delEmp(e_id emplo.eid%type)
+	IS
+	BEGIN
+		DELETE FROM emplo WHERE eid=e_id;
+	END delEmp;
+
+	PROCEDURE listEmp
+	IS
+	CURSOR e_emp IS SELECT ename FROM emplo;
+	TYPE e_list IS TABLE OF emplo.ename%type;
+	name_list e_list := e_list();
+	counter integer := 0;
+	BEGIN
+		FOR n IN e_emp LOOP
+			counter := counter+1;
+			name_list.extend;
+			name_list(counter) := n.ename;
+			dbms_output.put_line('Employee ('||counter||') = '||name_list(counter));
+		END LOOP;
+	END listEmp;
+
+	FUNCTION retSal (x in number) RETURN number
+	IS
+	sal number(5) := 0;
+	BEGIN
+		SELECT esalary INTO sal FROM emplo WHERE eid=x;
+		dbms_output.put_line('Salary : '||sal);
+		RETURN sal;
+	END retSal;
+END e_pack;
+/
+
+--EXECUTING PACKAGE PROCEDURES
+
+	--a.
+	
+	BEGIN
+		e_pack.addEmp(1,'Abin','XYZ',4000);
+		e_pack.addEmp(2,'Allen','XYZ',6000);
+		e_pack.addEmp(3,'Ben','XYZ',8000);
+		e_pack.addEmp(4,'Aaron','XYZ',9000);
+		e_pack.addEmp(5,'Rati','XYZ',5000);
+	END;
+	/
+	
+	--b.
+	
+	BEGIN
+		e_pack.delEmp(5);
+	END;
+	/
+	
+	--c.
+	
+	BEGIN
+		e_pack.listEmp;
+	END;
+	/
+	
+
+--SALARY FUNCTION
+
+accept x number prompt 'Enter employee ID : ' 
+DECLARE
+	code emplo.eid%type;
+	salary emplo.esalary%type;
+BEGIN
+	
+	code := &x;
+	salary := e_pack.retSal(code);
+	
+EXCEPTION
+	when no_data_found then
+		dbms_output.put_line('NO SUCH EMPLOYEE');
+	
+END;
+/
+
+----------------------------------------------------------------
+
+--OUTPUT
+
+SQL> @/home/cs-db-06/ADWAITH/14a.sql 
+
+Package created.
+
+SQL> @/home/cs-db-06/ADWAITH/14b.sql  
+
+Package body created.
+
+SQL> @/home/cs-db-06/ADWAITH/14c.sql
+
+PL/SQL procedure successfully completed.
+
+SQL> @/home/cs-db-06/ADWAITH/14c.sql
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from emplo;
+
+       EID ENAME		EADDRESS		ESALARY
+---------- -------------------- -------------------- ----------
+	 1 Abin 		XYZ			   4000
+	 2 Allen		XYZ			   6000
+	 3 Ben			XYZ			   8000
+	 4 Aaron		XYZ			   9000
+	 
+SQL> @/home/cs-db-06/ADWAITH/14c.sql
+Employee (1) = Abin
+Employee (2) = Allen
+Employee (3) = Ben
+Employee (4) = Aaron
+Employee (5) = Rati
+
+PL/SQL procedure successfully completed.
+
+SQL> @/home/cs-db-06/ADWAITH/14d.sql
+Enter employee ID : 2
+old   6: 	code := &x;
+new   6: 	code := 	 2;
+Salary : 6000
+
+PL/SQL procedure successfully completed.
+
+SQL> @/home/cs-db-06/ADWAITH/14d.sql
+Enter employee ID : 9 
+old   6: 	code := &x;
+new   6: 	code := 	 9;
+NO SUCH EMPLOYEE
+
+PL/SQL procedure successfully completed.
+
+
+

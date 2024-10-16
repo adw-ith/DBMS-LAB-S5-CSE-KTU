@@ -1,0 +1,112 @@
+EXPERIMENT 13 - Train 
+NAME :ADWAITH RAJ
+ROLL NO : 5
+
+----------------------------------------------------------------
+
+-- CREATING TABLES
+
+create table train(tno number(1) primary key, tname varchar(5), tdate date, destination varchar(10), seats number(3))
+
+----------------------------------------------------------------
+
+--Trigger to auto increment Train No
+
+set serveroutput on
+create sequence train_seq;
+create or replace trigger train_ins
+before 
+insert on train for each row
+begin
+	select train_seq.nextval into :new.tno from dual;
+end;
+/
+
+--Program to reserve and cancel seats
+
+set serveroutput on
+accept x char prompt '1.Reserve  2.Cancel : ';
+declare
+	choice varchar(2);
+	tseat number(3);
+	trainno number(5);
+	no number(4);
+begin
+	choice := &x;
+	trainno := &trainno;
+	no := &no;
+	select seats into tseat from train where tno = trainno;
+	case choice
+		when '1' then 
+			tseat := tseat - no;
+			update train set seats = tseat where tno = trainno;
+		when '2' then
+			tseat := tseat + no;
+			update train set seats = tseat where tno = trainno;
+	end case;
+end;
+/
+
+----------------------------------------------------------------
+
+--OUTPUT
+
+insert into train (tname,tdate,destination,seats)values('Jana', '27-MAY-24', 'Thrissur', 15 );
+insert into train (tname,tdate,destination,seats)values('Kurla', '26-MAY-24', 'Kannur', 45 );
+insert into train (tname,tdate,destination,seats)values('Duran', '24-MAY-24', 'Kottayam', 30 );
+
+SQL> select  * from train;
+
+       TNO TNAME TDATE		    DESTINATIO	    SEATS
+---------- ----- ------------------ ---------- ----------
+	 1 Jana  27-MAY-24	    Thrissur	       15
+	 2 Kurla 26-MAY-24	    Kannur	       45
+	 3 Duran 24-MAY-24	    Kottayam	       30
+
+
+SQL> @/home/cs-db-06/ADWAITH/train2.sql
+1.Reserve  2.Cancel : 1
+old   7: 	choice := &x;
+new   7: 	choice := 1;
+Enter value for trainno: 2
+old   8: 	trainno := &trainno;
+new   8: 	trainno := 2;
+Enter value for no: 5
+old   9: 	no := &no;
+new   9: 	no := 5;
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from train;
+
+       TNO TNAME TDATE		    DESTINATIO	    SEATS
+---------- ----- ------------------ ---------- ----------
+	 1 Jana  27-MAY-24	    Thrissur	       15
+	 2 Kurla 26-MAY-24	    Kannur	       40
+	 3 Duran 24-MAY-24	    Kottayam	       30
+	 4 venad 23-MAY-24	    Delhi	      150
+
+SQL> @/home/cs-db-06/ADWAITH/train2.sql
+1.Reserve  2.Cancel : 2
+old   7: 	choice := &x;
+new   7: 	choice := 2;
+Enter value for trainno: 2
+old   8: 	trainno := &trainno;
+new   8: 	trainno := 2;
+Enter value for no: 5
+old   9: 	no := &no;
+new   9: 	no := 5;
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from train;
+
+       TNO TNAME TDATE		    DESTINATIO	    SEATS
+---------- ----- ------------------ ---------- ----------
+	 1 Jana  27-MAY-24	    Thrissur	       15
+	 2 Kurla 26-MAY-24	    Kannur	       45
+	 3 Duran 24-MAY-24	    Kottayam	       30
+	 4 venad 23-MAY-24	    Delhi	      150
+
+
+

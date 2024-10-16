@@ -1,0 +1,101 @@
+EXPERIMENT 10 - ELECTRICITY BILL
+NAME :ADWAITH RAJ
+ROLL NO : 5
+
+----------------------------------------------------------------
+
+-- CREATING TABLES
+
+create table users(cusno int, name varchar(20),past float, present float);
+
+insert into users values(1,'Acquin',100,210);
+insert into users values(2,'Adithyan',250,1000);
+insert into users values(3,'Aiswarya',720,800);
+insert into users values(4,'Aljoe',900,1650);
+
+----------------------------------------------------------------
+
+--PL/SQL CODE
+
+set serveroutput on
+declare
+	cursor ele is select * from users;
+	unit float;
+	unitc float;
+	bil float;
+	cus int;
+	new int;
+	we varchar(20);
+begin 
+	cus := &cus;
+	new := &new;
+	for i in ele loop
+		if i.cusno = cus then
+			bil := 0;
+			dbms_output.put_line('past bill :' ||i.present);
+			unit := new - i.present;
+			unitc := unit;
+			if unit > 500 then
+				bil := bil + 100 * 5 + 200 * 7.5 + 200 * 15;
+				unit := unit -500;
+				bil := bil + unit * 22.5;
+			elsif unit>300 then
+				bil := bil + 100 * 5 + 200 * 7.5;
+				unit := unit - 300;
+				bil := bil + unit * 15;
+			elsif unit > 100 then 
+				bil := bil + unit * 5;
+				unit := unit - 100;
+				bil := bil + unit * 7.5;
+			else
+				bil := bil * 5;
+			end if;
+			dbms_output.put_line('customerno : ' ||i.cusno);
+			dbms_output.put_line('Name : ' || i.name);
+			dbms_output.put_line('unit consumed :' ||unitc);
+			dbms_output.put_line('Bill amount : ' || bil);
+			select to_char (current_date,'dd-mm-yyyy') into we from dual;
+			update users set past = present, present =new where cusno = cus;
+			dbms_output.put_line('Date : '||we);
+		end if;
+	end loop;
+end;
+/
+
+----------------------------------------------------------------
+
+--OUTPUT
+
+     CUSNO NAME 		      PAST    PRESENT
+---------- -------------------- ---------- ----------
+	 1 Acquin		       100	  210
+	 2 Adithyan		       250	 1000
+	 3 Aiswarya		       720	  800
+	 4 Aljoe		       900	 1650
+
+
+SQL> @/home/cs-db-06/ADWAITH/eb.sql
+Enter value for cus: 3
+old  10: 	cus := &cus;
+new  10: 	cus := 3;
+Enter value for new: 1400
+old  11: 	new := &new;
+new  11: 	new := 1400;
+past bill :800
+customerno : 3
+Name : Aiswarya
+unit consumed :600
+Bill amount : 7250
+Date : 04-09-2024
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from users;
+
+     CUSNO NAME 		      PAST    PRESENT
+---------- -------------------- ---------- ----------
+	 1 Acquin		       100	  210
+	 2 Adithyan		       250	 1000
+	 3 Aiswarya		       800	 1400
+	 4 Aljoe		       900	 1650
+

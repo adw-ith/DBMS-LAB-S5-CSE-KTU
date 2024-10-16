@@ -1,0 +1,51 @@
+EXPERIMENT 10 - TRIGGER - AVERAGE MARKS
+NAME :ADWAITH RAJ
+ROLL NO : 5
+
+----------------------------------------------------------------
+
+-- CREATING TABLES
+
+create table students2(roll_no int, name varchar(10), m1 int, m2 int, m3 int,tot int, avge float);
+
+----------------------------------------------------------------
+
+--PL/SQL CODE
+
+set serveroutput on
+create or replace trigger y
+before
+insert on students2 for each row
+begin
+	case
+		when inserting then
+			update students2 set tot=m1+m2+m3;
+			update students2 set avge=(m1+m2+m3)/3;
+	end case;
+end;
+/
+
+
+----------------------------------------------------------------
+
+--OUTPUT
+
+SQL> @/home/cs-db-06/ADWAITH/trig2.sql
+
+Trigger created.
+
+
+SQL> insert into students2 (roll_no,name,m1,m2,m3) values(1, 'Albin', 4, 8, 10);
+insert into students2 (roll_no,name,m1,m2,m3) values(2,'Aravind',8,9,10);
+insert into students2 (roll_no,name,m1,m2,m3) values(4,'Balu',6,8,7);
+insert into students2 (roll_no,name,m1,m2,m3) values(3,'Jacob',3,5,12);
+
+SQL> select * from students2;
+
+   ROLL_NO NAME 	      M1	 M2	    M3	      TOT	AVGE
+---------- ---------- ---------- ---------- ---------- ---------- ----------
+	 1 Albin	       4	  8	    10	       22 7.33333333
+	 2 Aravind	       8	  9	    10	       27	   9
+	 4 Balu 	       6	  8	     7	       21	   7
+	 3 Jacob	       3	  5	    12
+

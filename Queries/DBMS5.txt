@@ -1,0 +1,290 @@
+EXPERIMENT 5 - NESTED AND CORELATED QUERIES
+NAME :ADWAITH RAJ
+ROLL NO : 5
+
+
+----------------------------------------------------------------
+
+
+-- CREATING TABLES
+
+ CREATE TABLE PRODUCT (
+  product_no VARCHAR(15) NOT NULL,
+  description VARCHAR(20) NOT NULL,
+  company VARCHAR(10) NOT NULL,
+  price INT NOT NULL,
+  PRIMARY KEY (product_no)
+);  
+CREATE TABLE CUSTOMER (
+  cust_no VARCHAR(6) NOT NULL,
+  name VARCHAR(15) NOT NULL,
+  age INT NOT NULL,
+  city VARCHAR(10) NOT NULL,
+  pincode INT NOT NULL,
+  state VARCHAR(15) NOT NULL,
+  PRIMARY KEY (cust_no)
+);
+
+CREATE TABLE SUPPLIER (
+   s_no VARCHAR(10) NOT NULL,
+     sname VARCHAR(20) NOT NULL,
+   age int NOT NULL,
+    city VARCHAR(10) NOT NULL,
+  PRIMARY KEY (s_no) 
+    );
+CREATE TABLE PURCHASE (
+  order_no VARCHAR(15) NOT NULL,
+  custno VARCHAR(15) NOT NULL,
+  prono VARCHAR(15) NOT NULL,
+  quantity INT NOT NULL,
+  orderdate DATE,
+  PRIMARY KEY (order_no),
+  FOREIGN KEY (custno) REFERENCES CUSTOMER(cust_no),
+  FOREIGN KEY (prono) REFERENCES PRODUCT(product_no)
+);
+
+--INSERTING VALUES
+ 
+ INSERT INTO PRODUCT VALUES ('P00001', '12 W Flood Light', 'Wipro', 5000);
+ INSERT INTO PRODUCT VALUES ('P00002', 'Laptop Adapter', 'Dell', 1560);
+ INSERT INTO PRODUCT VALUES ('P00003', 'Tablet', 'HCL', 11000);
+ INSERT INTO PRODUCT VALUES ('P00004', 'Garnet 50W led', 'Wipro', 999);
+ INSERT INTO PRODUCT VALUES ('P00005', 'Laptop Charger', 'HCL', 1690);
+ 
+ INSERT INTO CUSTOMER VALUES ('C00001', 'Ivan Bayross', 35, 'Bombay', 400054, 'Maharashtra');
+ INSERT INTO CUSTOMER VALUES ('C00002', 'Vandana Saitwal', 35, 'Madras', 780001, 'Tamilnadu');
+ INSERT INTO CUSTOMER VALUES ('C00003', 'Pramada Jaguste', 55, 'Bombay', 400057, 'Maharashtra');
+ INSERT INTO CUSTOMER VALUES ('C00004', 'Basu Navindgi', 45, 'Bombay', 400056, 'Maharashtra');
+ INSERT INTO CUSTOMER VALUES ('C00005', 'Ravi Sreedharan', 25, 'Delhi', 100001, 'Delhi');
+ INSERT INTO CUSTOMER VALUES ('C00006', 'Rukmini', 25, 'Madras', 780001, 'Tamilnadu');
+ 
+ INSERT INTO SUPPLIER VALUES ('S001', 'Ivan Bayross', 35,'Bombay');
+ INSERT INTO SUPPLIER VALUES ('S002', 'Nirmala Agarwal',35, 'Madras');
+ INSERT INTO SUPPLIER VALUES('S003', 'Susmitha', 55,'Bombay');
+ INSERT INTO SUPPLIER VALUES('S004', 'Basu Navindgi', 45,'Bombay'); 
+ INSERT INTO SUPPLIER VALUES('S005', 'Ravi Sreedharan',25, 'Delhi'); 
+ INSERT INTO SUPPLIER VALUES('S006', 'Nanda Gopal', 25,'Madras'); 
+ 
+ INSERT INTO PURCHASE VALUES ('O00001', 'C00002', 'P00003', 2, '20-JAN-16');
+ INSERT INTO PURCHASE VALUES ('O00002', 'C00003', 'P00002', 1, '27-JAN-16');
+ INSERT INTO PURCHASE VALUES ('O00003', 'C00004', 'P00002', 3, '28-JAN-16');
+ INSERT INTO PURCHASE VALUES('O00004', 'C00006', 'P00001', 3, '20-FEB-16');
+ INSERT INTO PURCHASE VALUES('O00005', 'C00003', 'P00005', 4, '07-APR-16');
+ INSERT INTO PURCHASE VALUES('O00006', 'C00004', 'P00002', 2, '22-MAY-16');
+ INSERT INTO PURCHASE VALUES('O00007', 'C00005', 'P00004', 1, '26-MAY-16');
+ 
+ --DISPLAY TABLES
+ 
+SELECT  * FROM CUSTOMER1 WHERE UPPER(SUBSTR(CUST_NAME,1,1))='A';
+
+   CUST_ID CUST_NAME	   CITY 	       AMOUNT	DISCOUNT SALESMAN_ID
+---------- --------------- --------------- ---------- ---------- ---------------
+       109 Anurag	   Kottayam		 3860	      12 KtmB158tmp
+       110 Antony	   Kottayam		 9800	       8 KtmP1028
+
+SELECT * FROM PRODUCT; 
+
+PRODUCT_NO	DESCRIPTION	     COMPANY	     PRICE
+--------------- -------------------- ---------- ----------
+P00001		12 W Flood Light     Wipro	      5000
+P00002		Laptop Adapter	     Dell	      1560
+P00003		Tablet		     HCL	     11000
+P00004		Garnet 50W led	     Wipro	       999
+P00005		Laptop Charger	     HCL	      1690
+
+SELECT * FROM CUSTOMER;
+
+CUST_N NAME		      AGE CITY		PINCODE STATE
+------ --------------- ---------- ---------- ---------- ---------------
+C00001 Ivan Bayross	       35 Bombay	 400054 Maharashtra
+C00002 Vandana Saitwal	       35 Madras	 780001 Tamilnadu
+C00003 Pramada Jaguste	       55 Bombay	 400057 Maharashtra
+C00004 Basu Navindgi	       45 Bombay	 400056 Maharashtra
+C00005 Ravi Sreedharan	       25 Delhi 	 100001 Delhi
+C00006 Rukmini		       25 Madras	 780001 Tamilnadu
+
+6 rows selected.
+
+SELECT * FROM SUPPLIER;      
+
+S_NO	   SNAME		       AGE CITY
+---------- -------------------- ---------- ----------
+S001	   Ivan Bayross 		35 Bombay
+S002	   Nirmala Agarwal		35 Madras
+S003	   Susmitha			55 Bombay
+S004	   Basu Navindgi		45 Bombay
+S005	   Ravi Sreedharan		25 Delhi
+S006	   Nanda Gopal			25 Madras
+
+6 rows selected.
+
+SELECT * FROM PURCHASE;
+
+ORDER_NO	CUSTNO		PRONO		  QUANTITY ORDERDATE
+--------------- --------------- --------------- ---------- ------------------
+O00001		C00002		P00003			 2 20-JAN-16
+O00002		C00003		P00002			 1 27-JAN-16
+O00003		C00004		P00002			 3 28-JAN-16
+O00004		C00006		P00001			 3 20-FEB-16
+O00005		C00003		P00005			 4 07-APR-16
+O00006		C00004		P00002			 2 22-MAY-16
+O00007		C00005		P00004			 1 26-MAY-16
+
+7 rows selected.
+
+ -- -------------------------------
+-- QUERIES
+-- -------------------------------
+
+NESTED QUERIES
+1. List customer-numbers of all who purchased the product ‘Laptop Adapter’ during January.
+
+SQL> SELECT * FROM PURCHASE WHERE prono=(SELECT product_no AS prono FROM PRODUCT WHERE DESCRIPTION='Laptop Adapter') AND orderdate>='01-JAN-16' AND orderdate<='31-JAN-16';
+
+ORDER_NO	CUSTNO		PRONO		  QUANTITY ORDERDATE
+--------------- --------------- --------------- ---------- ------------------
+O00002		C00003		P00002			 1 27-JAN-16
+O00003		C00004		P00002			 3 28-JAN-16
+
+2. Get customer names of all who purchased P00002.
+
+SQL> SELECT NAME FROM CUSTOMER WHERE cust_no IN (SELECT custno FROM PURCHASE WHERE prono='P00002');
+
+NAME
+---------------
+Pramada Jaguste
+Basu Navindgi
+
+3. List customer-numbers of all who have purchased products with cost more than Rs. 1600.
+
+SQL> SELECT CUSTNO FROM PURCHASE WHERE prono IN (SELECT product_no FROM PRODUCT WHERE price>1600);
+
+CUSTNO
+---------------
+C00002
+C00006
+C00003
+
+4. List customer-names of all who have purchased products with cost more than Rs. 1500 during January.
+
+SQL> SELECT NAME FROM CUSTOMER WHERE cust_no IN (SELECT custno FROM PURCHASE WHERE prono IN (SELECT product_no FROM PRODUCT WHERE price>1500) AND orderdate>='01-JAN-16' AND orderdate<='31-JAN-16');
+
+NAME
+---------------
+Vandana Saitwal
+Pramada Jaguste
+Basu Navindgi
+
+
+5. List customer-numbers of all who have purchased products with cost less than Rs. 1600.
+
+SQL> SELECT DISTINCT CUSTNO FROM PURCHASE WHERE prono IN (SELECT product_no FROM PRODUCT WHERE price<1600);
+
+CUSTNO
+---------------
+C00003
+C00004
+C00005
+
+
+6. Get customer numbers of purchases such that the quantity is more than maximum quantity of all purchases of C00002.
+
+SQL> SELECT CUSTNO FROM PURCHASE WHERE prono IN (SELECT product_no FROM PRODUCT WHERE quantity>(SELECT MAX(quantity) FROM PURCHASE WHERE custno='C00002'));
+
+CUSTNO
+---------------
+C00004
+C00006
+C00003
+
+7. Get the name of all the customers who have not purchased any item currently.
+
+SQL> SELECT NAME FROM CUSTOMER WHERE cust_no NOT IN (SELECT custno FROM PURCHASE);
+
+NAME
+---------------
+Ivan Bayross
+
+8. Get the name of all customers who have purchased at least one item from Wipro.
+
+SQL> SELECT NAME FROM CUSTOMER WHERE cust_no IN (SELECT custno FROM PURCHASE WHERE prono IN (SELECT product_no FROM PRODUCT WHERE company='Wipro'));
+
+NAME
+---------------
+Ravi Sreedharan
+Rukmini
+
+CORRELATED QUERIES
+
+1. List all customer-number pairs such that the cost of the item purchased by the first customer is less than that of second customer.
+
+SQL> SELECT UNIQUE C1.custno AS cust1no,C1.price AS price1,C2.custno AS cust2no,C2.price AS price2 FROM (SELECT * FROM PURCHASE JOIN PRODUCT ON PURCHASE.prono=PRODUCT.product_no) C1 CROSS JOIN (SELECT * FROM PURCHASE JOIN PRODUCT ON PURCHASE.prono=PRODUCT.product_no) C2 WHERE C1.price<C2.price;
+
+CUST1NO 	    PRICE1 CUST2NO	       PRICE2
+--------------- ---------- --------------- ----------
+C00003		      1690 C00002		11000
+C00004		      1560 C00006		 5000
+C00003		      1560 C00006		 5000
+C00005		       999 C00003		 1690
+C00005		       999 C00004		 1560
+C00006		      5000 C00002		11000
+C00003		      1560 C00002		11000
+C00005		       999 C00006		 5000
+C00005		       999 C00003		 1560
+C00004		      1560 C00002		11000
+C00004		      1560 C00003		 1690
+C00003		      1560 C00003		 1690
+C00005		       999 C00002		11000
+C00003		      1690 C00006		 5000
+
+2. List pairs of customer - product names of all who has purchased products with cost less than Rs. 1600.
+
+SQL>  SELECT DISTINCT(C1.NAME) AS CUSTOMER , DESCRIPTION AS PRODUCT FROM CUSTOMER C1 JOIN PURCHASE P1 ON
+C1.CUST_NO = P1.CUSTNO JOIN PRODUCT P ON P1.PRONO =P.PRODUCT_NO WHERE(
+ SELECT PRICE FROM PRODUCT PR WHERE PR.PRODUCT_NO = P1.PRONO)<1600;  2    3  
+
+CUSTOMER	PRODUCT
+--------------- --------------------
+Basu Navindgi	Laptop Adapter
+Pramada Jaguste Laptop Adapter
+Ravi Sreedharan Garnet 50W led
+
+
+3. Get product nos of all products purchased by more than one customer.
+
+SQL> SELECT prono FROM PURCHASE GROUP BY prono HAVING COUNT(prono)>1;
+
+PRONO
+---------------
+P00002
+
+
+4. Get the name of customers who have purchased the item P00002.
+
+SQL> SELECT NAME FROM CUSTOMER WHERE cust_no IN (SELECT custno FROM PURCHASE WHERE prono='P00002');
+
+NAME
+---------------
+Pramada Jaguste
+Basu Navindgi
+
+5. Get the name of customers who have not purchased the item P00002.
+
+SQL> SELECT NAME FROM CUSTOMER WHERE cust_no NOT IN (SELECT custno FROM PURCHASE WHERE prono='P00002');
+
+NAME
+---------------
+Vandana Saitwal
+Rukmini
+Ravi Sreedharan
+Ivan Bayross
+
+6. Get the name of customers who have purchased at least all those products purchased by C00004.
+
+SQL> SELECT NAME FROM CUSTOMER WHERE cust_no IN (SELECT custno FROM PURCHASE WHERE prono IN (SELECT PRONO FROM PURCHASE WHERE custno='C00004') AND prono IN (SELECT prono FROM PURCHASE)) AND cust_no NOT IN ('C00004');
+
+NAME
+---------------
+Pramada Jaguste
+
+

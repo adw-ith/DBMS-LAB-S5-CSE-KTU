@@ -1,0 +1,89 @@
+EXPERIMENT 11 - TRIGGER - INSERT/UPDATE/DELETE STUDENT RECORD
+NAME :ADWAITH RAJ
+ROLL NO : 5
+
+----------------------------------------------------------------
+
+-- CREATING TABLES
+
+create table students1(roll_no int primary key, name varchar(20), grade_s1 float, grade_s2 float);
+
+insert into students1 values(1,'Albin',4,8);
+insert into students1 values(2,'Aravind',8,9);
+insert into students1 values(3,'Jacob',3,5);
+insert into students1 values(4,'Balu',6,8);
+insert into students1 values(5,'Gokul',2,9);
+insert into students1 values(6,'Adithyan',1,2);
+insert into students1 values(7,'Adithyan',1,2);
+
+----------------------------------------------------------------
+
+--PL/SQL CODE
+
+set serveroutput on
+create or replace trigger t 
+before
+insert or update of roll_no, name, grade_s1, grade_s2 or delete on students1 for each row
+begin
+	case
+		when inserting then
+			dbms_output.put_line('Trigger message : inserting ' ||:new.name);
+		when updating('roll_no') then
+			dbms_output.put_line('Trigger message : updating ' ||:new.name||':old roll_no-'||:old.roll_no||' to new roll_no-'||:new.roll_no);
+		when updating('name') then
+			dbms_output.put_line('Trigger message : updating ' ||:new.name||':old name-'||:old.name||' to new name-'||:new.name);
+		when updating('grade_s1') then
+			dbms_output.put_line('Trigger message : updating ' ||:new.name||':old grade_s1-'||:old.grade_s1||' to new grade_s1-'||:new.grade_s1);
+		when updating('grade_s2') then
+			dbms_output.put_line('Trigger message : updating ' ||:new.name||':old grade_s2-'||:old.grade_s2||' to new grade_s2-'||:new.grade_s2);
+		when deleting then
+			dbms_output.put_line('Trigger message : deleting ' ||:old.name);
+	end case;
+end;
+/
+
+----------------------------------------------------------------
+
+--OUTPUT
+
+SQL> select * from students1;
+
+   ROLL_NO NAME 		  GRADE_S1   GRADE_S2
+---------- -------------------- ---------- ----------
+	 1 Albin			 4	    8
+	 2 Aravind			 8	    9
+	 3 Jacob			 3	    5
+	 4 Balu 			 6	    8
+	 5 Gokul			 2	    9
+	 6 Adithyan			 1	    2
+	 7 Adithyan			 1	    2
+	 
+SQL> @/home/cs-db-06/ADWAITH/trig.sql
+
+Trigger created.
+
+SQL> insert into students1 values(9 , 'Allen' , 5 , 6);
+Trigger message : inserting Allen
+
+1 row created.
+
+SQL> delete from students1 where roll_no = 8;
+Trigger message : deleting Adithyan
+
+1 row deleted.
+
+SQL> select * from students1;
+
+   ROLL_NO NAME 		  GRADE_S1   GRADE_S2
+---------- -------------------- ---------- ----------
+	 1 Albin			20	    8
+	 2 Aravind			 8	    9
+	 3 Jacob			 3	    5
+	 4 Balu 			 6	    8
+	 5 Gokul			 2	    9
+	 6 Adithyan			 1	    2
+	 9 Allen			 5	    6
+
+7 rows selected.
+
+
